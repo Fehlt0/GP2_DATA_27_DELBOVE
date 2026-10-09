@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class QuizManager : MonoBehaviour
@@ -29,13 +32,15 @@ public class QuizManager : MonoBehaviour
         if (answerID == currentQuestion.correctAnswerID)
         {
             Debug.Log("bonne réponse");
+            listButton[answerID].GetComponent<Image>().color = new Color(0, 255, 0);
         }
         else
         {
             Debug.Log("mauvaise réponse");
+            listButton[answerID].GetComponent<Image>().color = new Color(255, 0, 0);
         }
-        
-        SelectQuestion();
+
+        StartCoroutine(WaitForQuestion());
     }
 
     private void UpdateQuestionUI()
@@ -46,6 +51,13 @@ public class QuizManager : MonoBehaviour
         {
             TMPro.TextMeshProUGUI buttonText = listButton[i].GetComponentInChildren<TMPro.TextMeshProUGUI>();
             buttonText.text = currentQuestion.answers[i];
+            listButton[i].GetComponent<Image>().color = new Color(255, 255, 255);
         }
+    }
+
+    private IEnumerator WaitForQuestion()
+    {
+        yield return new WaitForSeconds(1f);
+        SelectQuestion();
     }
 }
